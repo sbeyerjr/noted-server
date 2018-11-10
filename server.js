@@ -1,22 +1,35 @@
-
+'user strict';
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const cors = require('cors');
 const app = express();
-
-const usersRouter = require('./routes/users');
+const passport = require('passport');
 const practiceRouter = require('./routes/practices');
-const authRouter = require('./routes/auth');
-const jwtAuth = require('./middleware/jwt-auth');
-
 const { PORT, DATABASE_URL } = require('./config');
 
 
 app.use(express.static('public'));
 app.use(express.json());
 app.use(cors());
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+  if (req.method === 'OPTIONS') {
+    return res.send(204);
+  }
+  next();
+});
+const { router: usersRouter } = require('./users');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+
+
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
+const jwtAuth = passport.authenticate('jwt', { session: false });
 
 app.use('/auth', authRouter);
 app.use('/practice', jwtAuth, practiceRouter);
