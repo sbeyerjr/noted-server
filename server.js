@@ -6,8 +6,10 @@ mongoose.Promise = global.Promise;
 const cors = require('cors');
 const app = express();
 
-
+const usersRouter = require('./routes/users');
 const practiceRouter = require('./routes/practices');
+const authRouter = require('./routes/auth');
+const jwtAuth = require('./middleware/jwt-auth');
 
 const { PORT, DATABASE_URL } = require('./config');
 
@@ -16,7 +18,9 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(cors());
 
-app.use('/practice', practiceRouter);
+app.use('/auth', authRouter);
+app.use('/practice', jwtAuth, practiceRouter);
+app.use('/users', usersRouter);
 
 
 app.use('*', (req, res) => {
