@@ -107,4 +107,4 @@ describe('Auth endpoints', function () {
         });
     });
   });
-});
+}); 
