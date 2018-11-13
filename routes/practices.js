@@ -1,25 +1,25 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const jsonParser = bodyParser.json();
-const { Practice } = require('../models/practice');
+const { Practice } = require("../models/practice");
 
-router.get('/', (req, res) => {
+router.get("/", (req, res) => {
   Practice.find()
     .then(practices => {
       res.json(practices.map(practice => practice.serialize()));
     })
     .catch(err => {
       console.error(err);
-      res.status(500).json({ message: 'Internal server error' });
+      res.status(500).json({ message: "Internal server error" });
     });
 });
 
-router.post('/', jsonParser, (req, res) => {
+router.post("/", jsonParser, (req, res) => {
   console.log(req.body);
-  const requiredFields = ['timePracticed'];
+  const requiredFields = ["timePracticed"];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -33,7 +33,7 @@ router.post('/', jsonParser, (req, res) => {
     date: req.body.date,
     timePracticed: req.body.timePracticed,
     scales: req.body.scales,
-    otherMusic: req.body.otherMusic,
+    otherMusic: req.body.otherMusic
   })
 
     .then(practice => {
@@ -42,11 +42,11 @@ router.post('/', jsonParser, (req, res) => {
     })
     .catch(err => {
       console.error(err);
-      res.status(500).json({ message: 'Internal server error' });
+      res.status(500).json({ message: "Internal server error" });
     });
 });
 
-router.put('/:id', jsonParser, (req, res) => {
+router.put("/:id", jsonParser, (req, res) => {
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     const message =
       `Request path id (${req.params.id}) and request body id ` +
@@ -56,12 +56,7 @@ router.put('/:id', jsonParser, (req, res) => {
   }
 
   const toUpdate = {};
-  const updateableFields = [
-    'date',
-    'timePracticed',
-    'scales',
-    'otherMusic'
-  ];
+  const updateableFields = ["date", "timePracticed", "scales", "otherMusic"];
 
   updateableFields.forEach(field => {
     if (field in req.body) {
@@ -71,13 +66,13 @@ router.put('/:id', jsonParser, (req, res) => {
 
   Practice.findByIdAndUpdate(req.params.id, { $set: toUpdate })
     .then(() => res.status(204).end())
-    .catch(() => res.status(500).json({ message: 'Internal Server Error' }));
+    .catch(() => res.status(500).json({ message: "Internal Server Error" }));
 });
 
-router.delete('/:id', (req, res) => {
+router.delete("/:id", (req, res) => {
   Practice.findByIdAndRemove(req.params.id)
     .then(() => res.status(204).end())
-    .catch(() => res.status(500).json({ message: 'Internal server error' }));
+    .catch(() => res.status(500).json({ message: "Internal server error" }));
 });
 
 module.exports = router;

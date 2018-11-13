@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const jwt = require('jsonwebtoken');
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+const jwt = require("jsonwebtoken");
 
-const { app, runServer, closeServer } = require('../server');
-const { User } = require('../users');
-const { JWT_SECRET, TEST_DATABASE_URL } = require('../config');
+const { app, runServer, closeServer } = require("../server");
+const { User } = require("../users");
+const { JWT_SECRET, TEST_DATABASE_URL } = require("../config");
 
 const expect = chai.expect;
 
@@ -15,21 +15,21 @@ const expect = chai.expect;
 // see: https://github.com/chaijs/chai-http
 chai.use(chaiHttp);
 
-describe('Auth endpoints', function () {
-  const username = 'exampleUser';
-  const password = 'examplePass';
-  const firstName = 'Example';
-  const lastName = 'User';
+describe("Auth endpoints", function() {
+  const username = "exampleUser";
+  const password = "examplePass";
+  const firstName = "Example";
+  const lastName = "User";
 
-  before(function () {
+  before(function() {
     return runServer(TEST_DATABASE_URL);
   });
 
-  after(function () {
+  after(function() {
     return closeServer();
   });
 
-  beforeEach(function () {
+  beforeEach(function() {
     return User.hashPassword(password).then(password =>
       User.create({
         username,
@@ -40,23 +40,23 @@ describe('Auth endpoints', function () {
     );
   });
 
-  afterEach(function () {
+  afterEach(function() {
     return User.remove({});
   });
 
-  describe('/auth/login', function () {
-    it('Should return a valid auth token', function () {
+  describe("/auth/login", function() {
+    it("Should return a valid auth token", function() {
       return chai
         .request(app)
-        .post('/auth/login')
+        .post("/auth/login")
         .send({ username, password })
         .then(res => {
           expect(res).to.have.status(200);
-          expect(res.body).to.be.an('object');
+          expect(res.body).to.be.an("object");
           const token = res.body.authToken;
-          expect(token).to.be.a('string');
+          expect(token).to.be.a("string");
           const payload = jwt.verify(token, JWT_SECRET, {
-            algorithm: ['HS256']
+            algorithm: ["HS256"]
           });
           expect(payload.user).to.deep.equal({
             username,
@@ -67,8 +67,8 @@ describe('Auth endpoints', function () {
     });
   });
 
-  describe('/auth/refresh', function () {
-    it('Should return a valid auth token with a newer expiry date', function () {
+  describe("/auth/refresh", function() {
+    it("Should return a valid auth token with a newer expiry date", function() {
       const token = jwt.sign(
         {
           user: {
@@ -79,24 +79,24 @@ describe('Auth endpoints', function () {
         },
         JWT_SECRET,
         {
-          algorithm: 'HS256',
+          algorithm: "HS256",
           subject: username,
-          expiresIn: '7d'
+          expiresIn: "7d"
         }
       );
       const decoded = jwt.decode(token);
 
       return chai
         .request(app)
-        .post('/auth/refresh')
-        .set('authorization', `Bearer ${token}`)
+        .post("/auth/refresh")
+        .set("authorization", `Bearer ${token}`)
         .then(res => {
           expect(res).to.have.status(200);
-          expect(res.body).to.be.an('object');
+          expect(res.body).to.be.an("object");
           const token = res.body.authToken;
-          expect(token).to.be.a('string');
+          expect(token).to.be.a("string");
           const payload = jwt.verify(token, JWT_SECRET, {
-            algorithm: ['HS256']
+            algorithm: ["HS256"]
           });
           expect(payload.user).to.deep.equal({
             username,
@@ -107,4 +107,4 @@ describe('Auth endpoints', function () {
         });
     });
   });
-}); 
+});

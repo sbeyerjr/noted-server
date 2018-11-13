@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const chai = require('chai');
-const chaiHttp = require('chai-http');
+const chai = require("chai");
+const chaiHttp = require("chai-http");
 
-const { app, runServer, closeServer } = require('../server');
-const { User } = require('../users');
-const { TEST_DATABASE_URL } = require('../config');
+const { app, runServer, closeServer } = require("../server");
+const { User } = require("../users");
+const { TEST_DATABASE_URL } = require("../config");
 
 const expect = chai.expect;
 
@@ -14,36 +14,36 @@ const expect = chai.expect;
 // see: https://github.com/chaijs/chai-http
 chai.use(chaiHttp);
 
-describe('/user', function () {
-  const username = 'exampleUser';
-  const password = 'examplePass';
-  const firstName = 'Example';
-  const lastName = 'User';
-  const usernameB = 'exampleUserB';
-  const passwordB = 'examplePassB';
-  const firstNameB = 'ExampleB';
-  const lastNameB = 'UserB';
+describe("/user", function() {
+  const username = "exampleUser";
+  const password = "examplePass";
+  const firstName = "Example";
+  const lastName = "User";
+  const usernameB = "exampleUserB";
+  const passwordB = "examplePassB";
+  const firstNameB = "ExampleB";
+  const lastNameB = "UserB";
 
-  before(function () {
+  before(function() {
     return runServer(TEST_DATABASE_URL);
   });
 
-  after(function () {
+  after(function() {
     return closeServer();
   });
 
-  beforeEach(function () { });
+  beforeEach(function() {});
 
-  afterEach(function () {
+  afterEach(function() {
     return User.remove({});
   });
 
-  describe('/users', function () {
-    describe('POST', function () {
-      it('Should create a new user', function () {
+  describe("/users", function() {
+    describe("POST", function() {
+      it("Should create a new user", function() {
         return chai
           .request(app)
-          .post('/users')
+          .post("/users")
           .send({
             username,
             password,
@@ -52,12 +52,8 @@ describe('/user', function () {
           })
           .then(res => {
             expect(res).to.have.status(201);
-            expect(res.body).to.be.an('object');
-            expect(res.body).to.have.keys(
-              'username',
-              'firstName',
-              'lastName'
-            );
+            expect(res.body).to.be.an("object");
+            expect(res.body).to.have.keys("username", "firstName", "lastName");
             expect(res.body.username).to.equal(username);
             expect(res.body.firstName).to.equal(firstName);
             expect(res.body.lastName).to.equal(lastName);
@@ -75,10 +71,10 @@ describe('/user', function () {
             expect(passwordIsCorrect).to.be.true;
           });
       });
-      it('Should trim firstName and lastName', function () {
+      it("Should trim firstName and lastName", function() {
         return chai
           .request(app)
-          .post('/users')
+          .post("/users")
           .send({
             username,
             password,
@@ -87,12 +83,8 @@ describe('/user', function () {
           })
           .then(res => {
             expect(res).to.have.status(201);
-            expect(res.body).to.be.an('object');
-            expect(res.body).to.have.keys(
-              'username',
-              'firstName',
-              'lastName'
-            );
+            expect(res.body).to.be.an("object");
+            expect(res.body).to.have.keys("username", "firstName", "lastName");
             expect(res.body.username).to.equal(username);
             expect(res.body.firstName).to.equal(firstName);
             expect(res.body.lastName).to.equal(lastName);
@@ -108,15 +100,18 @@ describe('/user', function () {
       });
     });
 
-    describe('GET', function () {
-      it('Should return an empty array initially', function () {
-        return chai.request(app).get('/users').then(res => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('array');
-          expect(res.body).to.have.length(0);
-        });
+    describe("GET", function() {
+      it("Should return an empty array initially", function() {
+        return chai
+          .request(app)
+          .get("/users")
+          .then(res => {
+            expect(res).to.have.status(200);
+            expect(res.body).to.be.an("array");
+            expect(res.body).to.have.length(0);
+          });
       });
-      it('Should return an array of users', function () {
+      it("Should return an array of users", function() {
         return User.create(
           {
             username,
@@ -131,10 +126,10 @@ describe('/user', function () {
             lastName: lastNameB
           }
         )
-          .then(() => chai.request(app).get('/users'))
+          .then(() => chai.request(app).get("/users"))
           .then(res => {
             expect(res).to.have.status(200);
-            expect(res.body).to.be.an('array');
+            expect(res.body).to.be.an("array");
             expect(res.body).to.have.length(2);
             expect(res.body[0]).to.deep.equal({
               username,

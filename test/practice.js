@@ -1,20 +1,20 @@
-'use strict';
+"use strict";
 
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const faker = require('faker');
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+const faker = require("faker");
+const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 const expect = chai.expect;
-const { User } = require('../users');
-const { Practice } = require('../models/practice');
-const { app, runServer, closeServer } = require('../server');
-const { TEST_DATABASE_URL, JWT_SECRET } = require('../config');
-const testUser = require('../db/seed/users')[0];
+const { User } = require("../users");
+const { Practice } = require("../models/practice");
+const { app, runServer, closeServer } = require("../server");
+const { TEST_DATABASE_URL, JWT_SECRET } = require("../config");
+const testUser = require("../db/seed/users")[0];
 chai.use(chaiHttp);
 
 function seedPracticeData() {
-  console.info('seeding practice data');
+  console.info("seeding practice data");
   const seedData = [];
 
   for (let i = 1; i <= 10; i++) {
@@ -29,16 +29,16 @@ function generatePracticeData() {
     date: faker.date.recent(),
     timePracticed: faker.random.number(),
     scales: faker.lorem.words(),
-    otherMusic: faker.lorem.paragraph(),
+    otherMusic: faker.lorem.paragraph()
   };
 }
 
 function tearDownDb() {
-  console.warn('Deleting database');
+  console.warn("Deleting database");
   return mongoose.connection.dropDatabase();
 }
 
-describe('Practices API resource', function() {
+describe("Practices API resource", function() {
   let user;
   let token;
   before(function() {
@@ -62,13 +62,13 @@ describe('Practices API resource', function() {
     return closeServer();
   });
 
-  describe('GET endpoint', function() {
-    it('should return all existing practices', function() {
+  describe("GET endpoint", function() {
+    it("should return all existing practices", function() {
       let res;
       return chai
         .request(app)
-        .get('/practice')
-        .set('Authorization', `Bearer ${token}`)
+        .get("/practice")
+        .set("Authorization", `Bearer ${token}`)
         .then(function(_res) {
           res = _res;
           console.log(res.body);
@@ -76,50 +76,50 @@ describe('Practices API resource', function() {
         });
     });
 
-    it('should return practices with right fields', function() {
+    it("should return practices with right fields", function() {
       // Strategy: Get back all practices, and ensure they have expected keys
 
       let resPractice;
       return chai
         .request(app)
-        .get('/practice')
-        .set('Authorization', `Bearer ${token}`)
+        .get("/practice")
+        .set("Authorization", `Bearer ${token}`)
         .then(function(res) {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
 
           res.body.forEach(function(practice) {
-            expect(practice).to.be.a('object');
+            expect(practice).to.be.a("object");
             expect(practice).to.include.keys(
-              'id',
-              'date',
-              'timePracticed',
-              'scales',
-              'otherMusic',
+              "id",
+              "date",
+              "timePracticed",
+              "scales",
+              "otherMusic"
             );
           });
           resPractice = res.body[0];
         });
     });
   });
-  describe('POST endpoint', function() {
-    it('should add a new practice', function() {
+  describe("POST endpoint", function() {
+    it("should add a new practice", function() {
       const newPractice = generatePracticeData();
 
       return chai
         .request(app)
-        .post('/practice')
-        .set('Authorization', `Bearer ${token}`)
+        .post("/practice")
+        .set("Authorization", `Bearer ${token}`)
         .send(newPractice);
     });
   });
-  describe('PUT endpoint', function() {
-    it('should update fields you send over', function() {
+  describe("PUT endpoint", function() {
+    it("should update fields you send over", function() {
       const updateData = {
-        date: '11/12/2018',
-        timePracticed: '30 minutes',
-        scales: 'A, D, G',
-        otherMusic: 'I practiced Moonlight Sonata',
+        date: "11/12/2018",
+        timePracticed: "30 minutes",
+        scales: "A, D, G",
+        otherMusic: "I practiced Moonlight Sonata"
       };
 
       return Practice.findOne()
@@ -128,7 +128,7 @@ describe('Practices API resource', function() {
           return chai
             .request(app)
             .put(`/practice/${practice.id}`)
-            .set('Authorization', `Bearer ${token}`)
+            .set("Authorization", `Bearer ${token}`)
             .send(updateData);
         })
         .then(function(res) {
@@ -145,8 +145,8 @@ describe('Practices API resource', function() {
     });
   });
 
-  describe('DELETE endpoint', function() {
-    it('delete a practice by id', function() {
+  describe("DELETE endpoint", function() {
+    it("delete a practice by id", function() {
       let practice;
 
       return Practice.findOne()
@@ -155,7 +155,7 @@ describe('Practices API resource', function() {
           return chai
             .request(app)
             .delete(`/practice/${practice.id}`)
-            .set('Authorization', `Bearer ${token}`);
+            .set("Authorization", `Bearer ${token}`);
         })
         .then(function(res) {
           expect(res).to.have.status(204);
