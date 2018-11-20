@@ -32,7 +32,7 @@ passport.use(jwtStrategy);
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 app.use('/auth', authRouter);
-app.use('/practice', jwtAuth, practiceRouter);
+app.use('/practice', practiceRouter);
 app.use('/users', usersRouter);
 
 
