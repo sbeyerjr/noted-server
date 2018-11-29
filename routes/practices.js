@@ -7,7 +7,7 @@ const jsonParser = bodyParser.json();
 const { Practice } = require("../models/practice");
 
 router.get("/", (req, res) => {
-  Practice.find()
+  Practice.find({userId:req.user.id})
     .then(practices => {
       res.json(practices.map(practice => practice.serialize()));
     })
@@ -18,7 +18,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", jsonParser, (req, res) => {
-  console.log(req.body);
+  console.log(req.user)
   const requiredFields = ["timePracticed"];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -33,7 +33,8 @@ router.post("/", jsonParser, (req, res) => {
     date: req.body.date,
     timePracticed: req.body.timePracticed,
     scales: req.body.scales,
-    otherMusic: req.body.otherMusic
+    otherMusic: req.body.otherMusic,
+    userId: req.user.id
   })
 
     .then(practice => {

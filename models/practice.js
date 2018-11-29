@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const practiceSchema = mongoose.Schema({
   date: { type: String, required: false },
-  timePracticed: { type: String, required: true },
+  timePracticed: { type: Number, required: true },
   scales: { type: String, required: false },
   otherMusic: { type: String, required: false },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }

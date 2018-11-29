@@ -1,4 +1,11 @@
 language: node_js
 node_js: node
-services: 
+services:
 - mongodb
+deploy:
+  provider: heroku
+  api_key:
+    secure: CgqRPMeSQZ303hnQPZa+EBie8DGUNHv7nrG0TC+aLg8vPxjn/pKeC5xP/Xp04t4yFihZLfF7X5X1PR/Q22N7RZ2odHlEnPzclqfj2bQ12yV9ej1471aonKEVTxPma8ndNKbUlbCM4sKoDIELv7Sppw7fzbLXQpwTOODa2eZLhcuUuJcYfYLwepa3SUc1Q//xw4XJbiNfifMzUfafEHfh9+Y386A3vLqAMdvNtEQEieY7r9VMYcSJAsg4OHB3j9g1T2qGr41aNHp1Vo6zHPRyAleXn5HYrNDaEI19Z6z6kYkovrajg7xjBXcIJ/84qluWRa3gLlQaoLqfNCf0QFzHn+MAiJIiFZQxokQotPRNawAmPHb43K8pJAV7alwgwZMy7aOYLsH9KuAVOjE4FM7VREaGQ6vXvUU9Da0InmS7aP/MEHFjEkgsoV55PxoxBPi17I8Dyb2ZtY7lF7GtOwz7/KvnT29nkQxpH//UOHjgf2EY8gUrkmdT+YiwCH+/BUyXKm+EaDbK5S9XysQTR8n3b2agVQSYdgi98Xhox813SWUaB7jjkPyZlpB1BVHZTkBXKXBFXWZCnQdr90OITcQ61vkKlpGt+qpTd1nkqG0IxAD4vZ9THPTGM67WutBeHpDbtKv+I5eRWem4wZvcemIUK1RmaIyuWJ/jnrVf7MTLtjI=
+  app: aqueous-badlands-81371
+  on:
+    repo: sbeyerjr/noted-server

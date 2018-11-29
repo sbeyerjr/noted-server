@@ -95,7 +95,8 @@ describe("Practices API resource", function() {
               "date",
               "timePracticed",
               "scales",
-              "otherMusic"
+              "otherMusic",
+              "userId"
             );
           });
           resPractice = res.body[0];
