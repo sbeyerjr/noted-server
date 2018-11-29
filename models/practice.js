@@ -17,7 +17,7 @@ practiceSchema.methods.serialize = function() {
     timePracticed: this.timePracticed,
     scales: this.scales,
     otherMusic: this.otherMusic,
-    userId: this.userId
+    userId: this.userId 
   };
 };
 
