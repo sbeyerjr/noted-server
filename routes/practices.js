@@ -61,7 +61,7 @@ router.put("/:id", jsonParser, (req, res) => {
 
   updateableFields.forEach(field => {
     if (field in req.body) {
-      toUpdate[field] = req.body[field];
+      toUpdate[field] = req.body[field]; 
     }
   });
 
